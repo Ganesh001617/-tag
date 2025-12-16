@@ -1,250 +1,59 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<title>#tag App</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<style>
-    body {
-        margin: 0;
-        font-family: Arial, sans-serif;
-        background: linear-gradient(135deg, red, yellow);
-        min-height: 100vh;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-
-    .container {
-        background: white;
-        width: 90%;
-        max-width: 400px;
-        padding: 20px;
-        border-radius: 20px;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-    }
-
-    h1 {
-        text-align: center;
-        color: red;
-    }
-
-    input, button {
-        width: 100%;
-        padding: 10px;
-        margin: 8px 0;
-        border-radius: 10px;
-        border: 1px solid #ccc;
-        font-size: 16px;
-    }
-
-    button {
-        background: linear-gradient(to right, red, orange);
-        color: white;
-        border: none;
-        cursor: pointer;
-        font-weight: bold;
-    }
-
-    .card {
-        background: #fff3e0;
-        padding: 10px;
-        border-radius: 10px;
-        margin-top: 10px;
-    }
-
-    .hidden {
-        display: none;
-    }
-
-    .friend {
-        background: #ffe082;
-        padding: 8px;
-        border-radius: 8px;
-        margin-top: 5px;
-    }
-</style>
-</head>
-
-<body>
-
-<div class="container">
-
-    <h1>#tag</h1>
-
-    <!-- SIGN UP -->
-    <div id="signup">
-        <input type="text" id="name" placeholder="Enter your name">
-        <input type="date" id="dob">
-        <button onclick="createAccount()">Create ID</button>
-    </div>
-
-    <!-- PROFILE -->
-    <div id="profile" class="hidden">
-        <div class="card">
-            <p><b>Name:</b> <span id="pname"></span></p>
-            <p><b>Your #tag ID:</b> <span id="pid"></span></p>
-        </div>
-
-        <input type="text" id="search" placeholder="Search friend by name or ID">
-        <button onclick="searchFriend()">Search</button>
-
-        <div id="result"></div>
-
-        <h3>Friends</h3>
-        <div id="friends"></div>
-    </div>
-
-</div>
-
-<script>
-let users = [];
-let currentUser = null;
-
-function generateID() {
-    return Math.floor(100 + Math.random() * 900); // 3 digit ID
-}
-
-function createAccount() {
-    const name = document.getElementById("name").value;
-    const dob = document.getElementById("dob").value;
-
-    if (name === "" || dob === "") {
-        alert("Please enter all details");
-        return;
-    }
-
-    const id = generateID();
-
-    currentUser = {
-        name: name,
-        dob: dob,
-        id: id,
-        friends: []
-    };
-
-    users.push(currentUser);
-
-    document.getElementById("signup").classList.add("hidden");
-    document.getElementById("profile").classList.remove("hidden");
-
-    document.getElementById("pname").innerText = name;
-    document.getElementById("pid").innerText = "#" + id;
-}
-
-function searchFriend() {
-    const value = document.getElementById("search").value.toLowerCase();
-    const resultDiv = document.getElementById("result");
-    resultDiv.innerHTML = "";
-
-    const found = users.find(
-        u => u.name.toLowerCase() === value || u.id.toString() === value
-    );
-
-    if (found && found !== currentUser) {
-        const div = document.createElement("div");
-        div.className = "friend";
-        div.innerHTML = `
-            ${found.name} (#${found.id})
-            <button onclick="addFriend(${found.id})">Follow</button>
-        `;
-        resultDiv.appendChild(div);
-    } else {
-        resultDiv.innerHTML = "<p>No user found</p>";
-    }
-}
-
-function addFriend(id) {
-    const friend = users.find(u => u.id === id);
-
-    if (!currentUser.friends.includes(friend)) {
-        currentUser.friends.push(friend);
-        displayFriends();
-        alert("You are now friends!");
-    }
-}
-
-function displayFriends() {
-    const div = document.getElementById("friends");
-    div.innerHTML = "";
-
-    currentUser.friends.forEach(f => {
-        const el = document.createElement("div");
-        el.className = "friend";
-        el.innerText = f.name + " (#" + f.id + ")";
-        div.appendChild(el);
-    });
-}
-</script>
-
-</body>
-</html>
 <!DOCTYPE html><html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>#tag App</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"><style>
-    body{
-        margin:0;
-        font-family: Arial, sans-serif;
-        background: linear-gradient(135deg, #ff1744, #ffeb3b);
-        min-height:100vh;
-        display:flex;
-        justify-content:center;
-        align-items:center;
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>#tag App</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, red, yellow);
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
-    .app{
-        background:#fff;
-        width:95%;
-        max-width:420px;
-        border-radius:22px;
-        box-shadow:0 15px 40px rgba(0,0,0,0.3);
-        padding:18px;
+    .card {
+      background: white;
+      width: 360px;
+      border-radius: 15px;
+      padding: 20px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+      display: none;
     }
-    h1{
-        text-align:center;
-        color:#ff1744;
-        margin-bottom:10px;
+    .card.active { display: block; }
+    h2 { text-align: center; color: #ff4d00; }
+    input, button {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 8px;
+      border: 1px solid #ccc;
     }
-    input, button{
-        width:100%;
-        padding:12px;
-        margin:6px 0;
-        border-radius:12px;
-        border:1px solid #ccc;
-        font-size:15px;
+    button {
+      background: linear-gradient(90deg, red, yellow);
+      border: none;
+      font-weight: bold;
+      cursor: pointer;
     }
-    button{
-        background:linear-gradient(to right, #ff1744, #ff9800);
-        color:white;
-        border:none;
-        font-weight:bold;
-        cursor:pointer;
+    .user-list div {
+      padding: 8px;
+      border-bottom: 1px solid #ddd;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
-    .card{
-        background:#fff8e1;
-        padding:12px;
-        border-radius:14px;
-        margin:8px 0;
+    .chat-box {
+      border: 1px solid #ccc;
+      height: 200px;
+      overflow-y: auto;
+      padding: 8px;
+      margin-bottom: 10px;
     }
-    .user{
-        background:#ffe082;
-        padding:8px;
-        border-radius:10px;
-        margin-top:6px;
-        display:flex;
-        justify-content:space-between;
-        align-items:center;
-    }
-    .hidden{display:none;}
-    .chat{
-        border:1px solid #ddd;
-        height:200px;
-        overflow-y:auto;
-        padding:8px;
-        border-radius:12px;
-        margin-bottom:6px;
-        background:#fafafa;
-    }
-   
+    .msg { margin: 5px 0; }
+    .emoji { cursor: pointer; font-size: 20px; margin: 2px; }
+  </style>
+</head>
+<body><!-- Page 1 : Login --><div class="card active" id="loginPage">
+  <h2>#tag Login
