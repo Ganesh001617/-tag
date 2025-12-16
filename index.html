@@ -1,59 +1,172 @@
 
-<!DOCTYPE html><html lang="en">
+
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>#tag App</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: linear-gradient(135deg, red, yellow);
-      height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-    .card {
-      background: white;
-      width: 360px;
-      border-radius: 15px;
-      padding: 20px;
-      box-shadow: 0 5px 20px rgba(0,0,0,0.3);
-      display: none;
-    }
-    .card.active { display: block; }
-    h2 { text-align: center; color: #ff4d00; }
-    input, button {
-      width: 100%;
-      padding: 10px;
-      margin: 10px 0;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-    }
-    button {
-      background: linear-gradient(90deg, red, yellow);
-      border: none;
-      font-weight: bold;
-      cursor: pointer;
-    }
-    .user-list div {
-      padding: 8px;
-      border-bottom: 1px solid #ddd;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .chat-box {
-      border: 1px solid #ccc;
-      height: 200px;
-      overflow-y: auto;
-      padding: 8px;
-      margin-bottom: 10px;
-    }
-    .msg { margin: 5px 0; }
-    .emoji { cursor: pointer; font-size: 20px; margin: 2px; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>#tag Chat App</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: linear-gradient(135deg, red, yellow);
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.app {
+  width: 360px;
+  height: 640px;
+  background: #fff;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 0 20px rgba(0,0,0,0.3);
+}
+
+.header {
+  background: linear-gradient(to right, red, yellow);
+  padding: 15px;
+  text-align: center;
+  font-size: 24px;
+  font-weight: bold;
+  color: white;
+}
+
+.screen {
+  display: none;
+  padding: 15px;
+}
+
+.screen.active {
+  display: block;
+}
+
+input, button {
+  width: 100%;
+  padding: 10px;
+  margin-top: 10px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+}
+
+button {
+  background: linear-gradient(to right, red, yellow);
+  color: white;
+  border: none;
+  font-size: 16px;
+}
+
+.chat-list div {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+  cursor: pointer;
+}
+
+.chat-box {
+  height: 400px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.msg.me {
+  text-align: right;
+  margin: 5px;
+  color: red;
+}
+
+.msg.other {
+  text-align: left;
+  margin: 5px;
+  color: black;
+}
+
+.footer {
+  display: flex;
+  gap: 5px;
+}
+</style>
 </head>
-<body><!-- Page 1 : Login --><div class="card active" id="loginPage">
-  <h2>#tag Login
+
+<body>
+
+<div class="app">
+  <div class="header">#tag</div>
+
+  <!-- Login Screen -->
+  <div class="screen active" id="login">
+    <h3>Login</h3>
+    <button onclick="goCreate()">Login</button>
+  </div>
+
+  <!-- Create ID Screen -->
+  <div class="screen" id="create">
+    <h3>Create ID</h3>
+    <input type="text" id="name" placeholder="Your Name">
+    <input type="date" id="dob">
+    <button onclick="createID()">Create Account</button>
+    <p id="code"></p>
+  </div>
+
+  <!-- Chat List -->
+  <div class="screen" id="list">
+    <h3>Chats</h3>
+    <div class="chat-list">
+      <div onclick="openChat()">Friend_001</div>
+    </div>
+  </div>
+
+  <!-- Chat Screen -->
+  <div class="screen" id="chat">
+    <h3>Friend_001</h3>
+    <div class="chat-box" id="chatBox"></div>
+    <div class="footer">
+      <input type="text" id="msg" placeholder="Message 😊">
+      <button onclick="send()">➤</button>
+    </div>
+  </div>
+</div>
+
+<script>
+function goCreate() {
+  show("create");
+}
+
+function createID() {
+  const name = document.getElementById("name").value;
+  const dob = document.getElementById("dob").value;
+  if (!name || !dob) {
+    alert("Fill all details");
+    return;
+  }
+  const code = Math.floor(100000 + Math.random() * 900000);
+  document.getElementById("code").innerText = "Your #tag code: " + code;
+  setTimeout(() => show("list"), 1500);
+}
+
+function openChat() {
+  show("chat");
+}
+
+function send() {
+  const msg = document.getElementById("msg").value;
+  if (!msg) return;
+  const box = document.getElementById("chatBox");
+  box.innerHTML += `<div class="msg me">${msg}</div>`;
+  document.getElementById("msg").value = "";
+  box.scrollTop = box.scrollHeight;
+}
+
+function show(id) {
+  document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+}
+</script>
+
+</body>
+</html>
